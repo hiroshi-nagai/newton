@@ -51,31 +51,31 @@ class Newton
             /*
              oxに最も近づくt値を近似する。epは収束時の許容誤差
              */
-            double x2;
+            double t2;
             double rf;
             double rdf;
-            double x=initval;
+            double t=initval;
             for (int i=0; i<count; i++)
                 {
-                    rf = this->f(x, ox, method, _param);
-                    rdf = this->df(x, ox, method, _param);
-                    std::cout<<"x:  " << x <<",   ox: "<< ox << ",  rf: " << rf << ",    rdf: " << rdf << std::endl;
+                    rf = this->f(t, ox, method, _param);
+                    rdf = this->df(t, ox, method, _param);
+                    std::cout<<"t:  " << t <<",   ox: "<< ox << ",  rf: " << rf << ",    rdf: " << rdf << std::endl;
                     if (rf ==0.0 || rdf==0.0)
                         {
                             return 0;
                         }
-                    x2 = x - rf / rdf;
-                    if (std::abs(x2-x) < ep)
+                    t2 = t - rf / rdf;
+                    if (std::abs(t2-t) < ep)
                         {
-                            x=x2;
+                            t=t2;
                             break;
                         }else{
-                            x=x2;
+                            t=t2;
                             continue;
                         }
-                        return x2;
+                        return t2;
                 }
-         return x2;
+         return t2;
         }
 };
 
@@ -84,7 +84,7 @@ class Newton
 double testMethod(double t, Param _param)
 {
     double result;
-    result = (_param.x * (_param.y/2)) *t;
+    result = (_param.x*_param.x*t / (_param.y/2)) *(t*t);
     return result;
 };
 
@@ -97,6 +97,7 @@ int main()
     test_param.y = 4.0;
     Newton nt;
     t = nt.newton(0.001, 200.34, testMethod, test_param, 1000000000, 0.0001);
+    std::cout<<"result:  " <<testMethod(t, test_param)<< std::endl;
     std::cout<<"t:  " <<t<< std::endl;
     return 0;
 }
